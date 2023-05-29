@@ -1,0 +1,227 @@
+Product:
+  name: Product
+  description: Product endpoints
+
+Review:
+  name: Review
+  description: Review endpoints
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        images:
+          type: array
+          items:
+            properties: string
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        apiKey:
+          type: string
+        bio:
+          type: string
+        photo:
+          type: string
+        city:
+          type: string
+    Review:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        productId:
+          type: string
+        review:
+          type: string
+
+/products:
+  get:
+    tags:
+      - Product
+    description: "List the products"
+    summary: "List products"
+    produces:
+      - "application/json"
+    responses:
+      200:
+        description: List of products
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                properties:
+                  _id:
+                    type: string
+                    example: "635d786a2be73d03233ad3cd"
+                  name:
+                    type: string
+                    example: "Consola 1"
+                  price:
+                    type: number
+                    example: 1000000
+                  images:
+                    type: array
+                    items: ["url1", "url2"]
+
+/products/{productId}/reviews:
+  get:
+    tags:
+      - Review
+    description: "Get the product reviews with creator user details"
+    summary: "Get the product reviews"
+    produces:
+      - "application/json"
+    parameters:
+      - in: path
+        name: productId
+        schema:
+          type: string
+          example: "635d786a2be73d03233ad3cd"
+        required: true
+        description: id of the product
+    responses:
+      200:
+        description: Product reviews details
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                properties:
+                  _id:
+                    type: string
+                    example: "635d786a2be73d03233ad3cd"
+                  user:
+                    type: object
+                    example:
+                      _id: "635d786a2be73d03233ad3cd"
+                      name: "Juan"
+                      email: "correo@email.com"
+                      photo: "www.link.to/picture.jpg"
+                      bio: "some bio"
+                      city: "Temuco"
+                  productId:
+                    type: object
+                    example:
+                      _id: "635d786a2be73d03233ad3cd"
+                      name: "Consola 1"
+                      price: 1000000
+                      images: ["url1", "url2"]
+                  review:
+                    type: string
+                    example: "buenisimo"
+  post:
+    tags:
+      - Review
+    description: "Create product review. You need an apikey for consume this endpoint"
+    summary: "Create product review"
+    produces:
+      - "application/json"
+    security:
+      - ApiKeyAuth: []
+    parameters:
+      - in: path
+        name: productId
+        schema:
+          type: string
+          example: "635d786a2be73d03233ad3cd"
+        required: true
+        description: id of the product
+      - in: body
+        name: review
+        schema:
+          type: string
+          example: "mensaje de review"
+        required: true
+        description: "review text"
+    responses:
+      201:
+        description: Created review
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                properties:
+                  _id:
+                    type: string
+                    example: "635d786a2be73d03233ad3cd"
+                  user:
+                    type: string
+                    example: "635d786a2be73d03233ad3cd"
+                  productId:
+                    type: string
+                    example: "635d786a2be73d03233ad3cd"
+                  review:
+                    type: string
+                    example: "buenisimo"
+
+/users/{userId}/reviews:
+  get:
+    tags:
+      - Review
+    description: "Get all reviews created by user"
+    summary: "Get all reviews by user"
+    produces:
+      - "application/json"
+    parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          example: "635d786a2be73d03233ad3cd"
+        required: true
+        description: id of the user
+    responses:
+      200:
+        description: Product reviews details
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                properties:
+                  _id:
+                    type: string
+                    example: "635d786a2be73d03233ad3cd"
+                  user:
+                    type: object
+                    example:
+                      _id: "635d786a2be73d03233ad3cd"
+                      name: "Juan"
+                      email: "correo@email.com"
+                      photo: "www.link.to/picture.jpg"
+                      bio: "some bio"
+                      city: "Temuco"
+                  productId:
+                    type: object
+                    example:
+                      _id: "635d786a2be73d03233ad3cd"
+                      name: "Consola 1"
+                      price: 1000000
+                      images: ["url1", "url2"]
+                  review:
+                    type: string
+                    example: "buenisimo"

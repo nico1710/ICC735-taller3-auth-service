@@ -1,0 +1,44 @@
+{
+	"name": "auth-service",
+	"version": "0.1.0",
+	"description": "Auth microservice",
+	"main": "src/app.js",
+	"scripts": {
+		"build": "babel ./src/app.js -d dist",
+		"local": "set NODE_ENV=local&&nodemon --exec babel-node ./src/app.js",
+		"dev": "set NODE_ENV=development&&nodemon --exec babel-node ./src/app.js",
+		"stg": "set NODE_ENV=staging&&nodemon --exec babel-node ./src/app.js",
+		"prod": "set NODE_ENV=production&&node ./dist/app.js",
+		"test": "jest",
+		"coverage": "jest --coverage"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"axios": "^1.4.0",
+		"bcrypt": "^5.1.0",
+		"cors": "^2.8.5",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"joi": "^17.9.2",
+		"jsonwebtoken": "^9.0.0",
+		"mongoose": "^6.7.0",
+		"randomatic": "^3.1.1",
+		"rut.js": "^2.1.0",
+		"swagger-jsdoc": "^6.2.5",
+		"swagger-ui-express": "^4.5.0",
+		"uuid": "^8.3.2"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.21.5",
+		"@babel/core": "^7.22.1",
+		"@babel/node": "^7.22.1",
+		"@babel/preset-env": "^7.22.2",
+		"babel-jest": "^29.5.0",
+		"chai": "^4.3.7",
+		"jest": "^29.5.0",
+		"nodemon": "^2.0.20",
+		"sinon": "^15.1.0",
+		"sinon-chai": "^3.7.0"
+	}
+}

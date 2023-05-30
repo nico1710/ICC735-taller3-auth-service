@@ -1,4 +1,4 @@
-# Taller 3: Auth Service
+# ICC735 - Taller 3 : Auth Service
 
 ## Auth service endpoints
 
@@ -18,12 +18,14 @@ Set the environment variables in env/.local.env file:
 - MONGO_URI: Mongo URI full format `mongodb://user:pass@host:port/databaseName`
 ```
 
-## API Documentation in Swagger: /docs
+## Run locally
 
 ```
 npm i
 npm run local
 ```
+
+## API Documentation in Swagger: /docs
 
 ## Tests and coverage
 

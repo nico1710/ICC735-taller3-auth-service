@@ -6,6 +6,7 @@ import { sendEmail } from "../services/notification.service.js";
 import environment from "../config/environment.js";
 import validateEmail from "../emails/validate.email.js";
 import { generateToken } from "../helpers/jwt.helper.js";
+import { getCriminalRecords } from "../services/registro-civil.service.js";
 
 const {
 	EMAIL_SERVICE: {
@@ -20,6 +21,12 @@ const randomizeConfig = {
 	length: 6,
 };
 
+/**
+ * Check if one user already exists in the database by email or rut
+ * @param {string} args.email - User's email
+ * @param {string} args.rut - User's rut
+ * @throws {HTTPError} throws 400 HTTPError when an user already exists
+ */
 async function checkIfUserAlreadyExists({ email, rut }) {
 	const emailRegex = new RegExp(`^${email}$`, "i");
 	const rutRegex = new RegExp(`^${rut}$`, "i");
@@ -51,11 +58,11 @@ async function checkIfUserAlreadyExists({ email, rut }) {
 	}
 }
 
-async function register(user) {
-	// Check if RUT is permitted
-
-	await checkIfUserAlreadyExists(user);
-
+/**
+ * Generate verify code token with 15 minutes of lifetime
+ * @returns {string} JWT
+ */
+function generateCodeToken() {
 	const valiationCode = randomize(
 		randomizeConfig.pattern,
 		randomizeConfig.length
@@ -65,6 +72,42 @@ async function register(user) {
 		data: { code: valiationCode },
 		expiresIn: "15m",
 	});
+
+	return codeToken;
+}
+
+/**
+ * TODO: Get correct (real) endpoint response from 'getCriminalRecords'
+ * and process the returned data into boolean variable
+ * @param {string} rut - User RUT
+ * @returns {boolean} true if the user doesn't has criminal records
+ */
+async function checkIfRUTisAllowed(rut) {
+	const response = await getCriminalRecords(rut);
+	if (!response) {
+		const { userNotAllowed } = registerMessages;
+
+		throw new HTTPError({
+			name: userNotAllowed.name,
+			msg: userNotAllowed.message,
+			code: 403,
+		});
+	}
+	return response;
+}
+
+/**
+ * Create a new user and save in database
+ * @param {User} user - User arguments
+ * @returns {string} id of the created user
+ */
+async function register(user) {
+	const { rut } = user;
+
+	await checkIfRUTisAllowed(rut);
+	await checkIfUserAlreadyExists(user);
+
+	const codeToken = generateCodeToken();
 
 	const userInstance = new UserModel({ ...user, code: codeToken });
 

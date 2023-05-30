@@ -107,11 +107,12 @@ describe("Controller: Login", () => {
 
 	it("[SUCCESS] Should return a token when LoginLogic return the token", async () => {
 		const token = "this-is-a-token";
+		const verified = true;
 
-		loginLogicStub.mockResolvedValue(token);
+		loginLogicStub.mockResolvedValue({ token, verified });
 
 		await login(defaultReq, res);
-		expect(res.json).toBeCalledWith({ token });
+		expect(res.json).toBeCalledWith({ token, verified });
 		expect(res.status).toBeCalledWith(200);
 		expect(loginLogicStub).toBeCalledWith({
 			email: defaultReq.body.email,

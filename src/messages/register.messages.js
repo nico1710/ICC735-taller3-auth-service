@@ -23,4 +23,8 @@ export default {
 			rut: "the rut already exists",
 		},
 	},
+	userNotAllowed: {
+		name: `${action}_user_not_allowed_error`,
+		message: "this user is not allowed to register in this platform",
+	},
 };

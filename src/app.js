@@ -31,10 +31,12 @@ app.use(
 );
 
 async function startApp() {
-	await connectDB();
-	app.listen(PORT, () =>
-		console.log(`Express API server running on ${HOST}:${PORT}`)
-	);
+	await connectDB().then(() => {
+		console.log("Connected to mongo successfully");
+		app.listen(PORT, () =>
+			console.log(`Express API server running on ${HOST}:${PORT}`)
+		);
+	});
 }
 
 startApp().catch(() => process.exit(-1));

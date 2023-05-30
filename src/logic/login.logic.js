@@ -3,18 +3,11 @@ import { HTTPError } from "../helpers/error.helper.js";
 import loginMessages from "../messages/login.messages.js";
 import { generateToken } from "../helpers/jwt.helper.js";
 
-function checkIfUserValidated({ verified }) {
-	if (!verified) {
-		const { noVerified } = loginMessages;
-
-		throw new HTTPError({
-			name: noVerified.name,
-			msg: noVerified.message,
-			code: 403,
-		});
-	}
-}
-
+/**
+ * Check if the user is blocked
+ * @param {boolean} args.blocked - User blocked flag
+ * @throws {HTTPError} throws 403 HTTPError if user is blocked
+ */
 function checkIfUserBlocked({ blocked }) {
 	if (blocked) {
 		const { blocked } = loginMessages;
@@ -27,6 +20,11 @@ function checkIfUserBlocked({ blocked }) {
 	}
 }
 
+/**
+ *
+ * @param {*} param0
+ * @returns
+ */
 async function login({ email, password }) {
 	const foundUser = await UserModel.findOne({
 		email: new RegExp(`^${email}$`, "i"),
@@ -54,10 +52,13 @@ async function login({ email, password }) {
 		});
 	}
 
-	checkIfUserValidated(foundUser);
 	checkIfUserBlocked(foundUser);
 
-	return generateToken({ data: { id: foundUser._id } });
+	const { _id, verified } = foundUser;
+
+	const token = generateToken({ data: { id: _id } });
+
+	return { token, verified };
 }
 
 export default login;

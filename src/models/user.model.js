@@ -32,7 +32,7 @@ const userSchema = new Schema(
 		},
 		code: {
 			type: String,
-			required: true,
+			required: false,
 			select: false,
 		},
 		blocked: {
@@ -74,22 +74,27 @@ userSchema.pre("save", function (next) {
 	});
 });
 
+/**
+ * Compare password with the current hashed password
+ * @param {string} candidatePassword - Cantidate password to check
+ * @returns {boolean}
+ */
 async function comparePassword(candidatePassword) {
 	return bcrypt.compareSync(candidatePassword, this.password);
 }
 
-async function hashCode(code) {
-	const salt = await bcrypt.genSaltSync(SALT_WORK_FACTOR);
-
-	const hash = await bcrypt.hashSync(code, salt);
-
-	this.code = hash;
+/**
+ * Set user.verified = true and remove the user.code
+ */
+function setVerified() {
+	this.code = null;
+	this.verified = true;
 	this.save();
 }
 
 userSchema.methods = {
 	comparePassword,
-	hashCode,
+	setVerified,
 };
 
 const UserModel = mongoose.model("User", userSchema);

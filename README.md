@@ -4,7 +4,7 @@
 
 - Register: ✅ (only on local environment)
 - Login: ✅
-- Verify Email: 🔜6
+- Verify Email: ✅
 - Get User: 🔜
 
 ## Initialize and run local
@@ -17,6 +17,8 @@ Set the environment variables in env/.local.env file:
 - PORT: running port number and for swagger client
 - MONGO_URI: Mongo URI full format `mongodb://user:pass@host:port/databaseName`
 ```
+
+## API Documentation in Swagger: /docs
 
 ```
 npm i

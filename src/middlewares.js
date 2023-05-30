@@ -1,17 +1,24 @@
-import userModel from "./models/user.model.js";
+import { returnErrorResponse } from "./helpers/error.helper.js";
+import { verifyToken } from "./helpers/jwt.helper.js";
 
-export function authMiddleware (req, res, next) {
-  const headers = req.headers;
+function authMiddleware(req, res, next) {
+	const headers = req.headers;
 
-  const apiKey = headers['apikey'];
+	const authorization = headers["Authorization"] ?? headers["authorization"];
 
-  if (!apiKey) return res.status(403).send({error: "Need an apikey!"})
+	if (!authorization) {
+		return res.status(401).send({ error: "need an authorization token!" });
+	}
 
-  userModel.findOne({apiKey}).exec(function (err, user){
-    if(err) res.status(500).send({error: "An error has ocured"});
-    if(!user) return res.status(403).send({error: "the apikey is invalid"})
+	const token = authorization.split(" ")[1];
+	try {
+		const payload = verifyToken(token);
+		req.userId = payload.id;
 
-    req.userId = user._id;
-    next();
-  });
+		next();
+	} catch (err) {
+		return returnErrorResponse(err, res);
+	}
 }
+
+export { authMiddleware };

@@ -9,9 +9,9 @@ async function login(req, res) {
 
 		const { email, password } = input;
 
-		const token = await loginLogic({ email, password });
+		const response = await loginLogic({ email, password });
 
-		return res.status(200).json({ token });
+		return res.status(200).json(response);
 	} catch (error) {
 		return returnErrorResponse(error, res);
 	}

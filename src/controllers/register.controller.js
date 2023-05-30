@@ -1,3 +1,4 @@
+import { clean } from "rut.js";
 import { returnErrorResponse } from "../helpers/error.helper.js";
 import registerLogic from "../logic/register.logic.js";
 import {
@@ -14,9 +15,14 @@ async function register(req, res) {
 
 		await passwordAndRutValidation.validateAsync({ password, rut });
 
-		const userId = await registerLogic({ email, password, rut, name });
+		const userId = await registerLogic({
+			email,
+			password,
+			rut: clean(rut),
+			name,
+		});
 
-		return res.status(200).json({ userId });
+		return res.status(201).json({ userId });
 	} catch (error) {
 		return returnErrorResponse(error, res);
 	}

@@ -1,31 +1,13 @@
-Product:
-  name: Product
-  description: Product endpoints
-
-Review:
-  name: Review
-  description: Review endpoints
+Auth:
+  name: Auth
+  description: Auth service
 
 components:
   securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: apikey
+    BearerAuth:
+      type: http
+      scheme: bearer
   schemas:
-    Product:
-      type: object
-      properties:
-        _id:
-          type: string
-        name:
-          type: string
-        price:
-          type: number
-        images:
-          type: array
-          items:
-            properties: string
     User:
       type: object
       properties:
@@ -35,193 +17,166 @@ components:
           type: string
         email:
           type: string
-        apiKey:
+        password:
           type: string
-        bio:
+        rut:
           type: string
-        photo:
+        verified:
+          type: boolean
+        code:
           type: string
-        city:
-          type: string
-    Review:
-      type: object
-      properties:
-        _id:
-          type: string
-        user:
-          type: string
-        productId:
-          type: string
-        review:
-          type: string
+        blocked:
+          type: boolean
+        createdAt:
+          type: Date
+        updatedAt:
+          type: Date
 
-/products:
-  get:
-    tags:
-      - Product
-    description: "List the products"
-    summary: "List products"
-    produces:
-      - "application/json"
-    responses:
-      200:
-        description: List of products
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                properties:
-                  _id:
-                    type: string
-                    example: "635d786a2be73d03233ad3cd"
-                  name:
-                    type: string
-                    example: "Consola 1"
-                  price:
-                    type: number
-                    example: 1000000
-                  images:
-                    type: array
-                    items: ["url1", "url2"]
-
-/products/{productId}/reviews:
-  get:
-    tags:
-      - Review
-    description: "Get the product reviews with creator user details"
-    summary: "Get the product reviews"
-    produces:
-      - "application/json"
-    parameters:
-      - in: path
-        name: productId
-        schema:
-          type: string
-          example: "635d786a2be73d03233ad3cd"
-        required: true
-        description: id of the product
-    responses:
-      200:
-        description: Product reviews details
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                properties:
-                  _id:
-                    type: string
-                    example: "635d786a2be73d03233ad3cd"
-                  user:
-                    type: object
-                    example:
-                      _id: "635d786a2be73d03233ad3cd"
-                      name: "Juan"
-                      email: "correo@email.com"
-                      photo: "www.link.to/picture.jpg"
-                      bio: "some bio"
-                      city: "Temuco"
-                  productId:
-                    type: object
-                    example:
-                      _id: "635d786a2be73d03233ad3cd"
-                      name: "Consola 1"
-                      price: 1000000
-                      images: ["url1", "url2"]
-                  review:
-                    type: string
-                    example: "buenisimo"
+/login:
   post:
     tags:
-      - Review
-    description: "Create product review. You need an apikey for consume this endpoint"
-    summary: "Create product review"
+      - Auth
+    description: "Login"
+    summary: "User login"
     produces:
       - "application/json"
-    security:
-      - ApiKeyAuth: []
     parameters:
-      - in: path
-        name: productId
-        schema:
-          type: string
-          example: "635d786a2be73d03233ad3cd"
-        required: true
-        description: id of the product
       - in: body
-        name: review
-        schema:
-          type: string
-          example: "mensaje de review"
+        name: email
+        type: string
         required: true
-        description: "review text"
-    responses:
-      201:
-        description: Created review
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                properties:
-                  _id:
-                    type: string
-                    example: "635d786a2be73d03233ad3cd"
-                  user:
-                    type: string
-                    example: "635d786a2be73d03233ad3cd"
-                  productId:
-                    type: string
-                    example: "635d786a2be73d03233ad3cd"
-                  review:
-                    type: string
-                    example: "buenisimo"
-
-/users/{userId}/reviews:
-  get:
-    tags:
-      - Review
-    description: "Get all reviews created by user"
-    summary: "Get all reviews by user"
-    produces:
-      - "application/json"
-    parameters:
-      - in: path
-        name: userId
-        schema:
-          type: string
-          example: "635d786a2be73d03233ad3cd"
+        description: "user's email"
+      - in: body
+        name: password
+        type: string
         required: true
-        description: id of the user
+        description: "strong password"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+            required:
+              - password
+              - email
     responses:
       200:
-        description: Product reviews details
+        description: Login successful
         content:
           application/json:
             schema:
-              type: array
-              items:
-                properties:
-                  _id:
-                    type: string
-                    example: "635d786a2be73d03233ad3cd"
-                  user:
-                    type: object
-                    example:
-                      _id: "635d786a2be73d03233ad3cd"
-                      name: "Juan"
-                      email: "correo@email.com"
-                      photo: "www.link.to/picture.jpg"
-                      bio: "some bio"
-                      city: "Temuco"
-                  productId:
-                    type: object
-                    example:
-                      _id: "635d786a2be73d03233ad3cd"
-                      name: "Consola 1"
-                      price: 1000000
-                      images: ["url1", "url2"]
-                  review:
-                    type: string
-                    example: "buenisimo"
+              properties:
+                token:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NzU2Y2E2ODg1NTgwMmMzNGUyM2QxNSIsImlhdCI6M"
+                verified:
+                  type: boolean
+                  example: true
+
+/register:
+  post:
+    tags:
+      - Auth
+    description: "Register"
+    summary: "User register"
+    consumes:
+      - "application/json"
+    produces:
+      - "application/json"
+    parameters:
+      - in: body
+        name: email
+        type: string
+        required: true
+        description: "user's email"
+      - in: body
+        name: password
+        type: string
+        required: true
+        description: "strong password"
+      - in: body
+        name: rut
+        type: string
+        required: true
+        description: "user's rut"
+      - in: body
+        name: name
+        type: string
+        required: true
+        description: "user's name"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+              rut:
+                type: string
+              name:
+                type: string
+            required:
+              - password
+              - email
+              - rut
+              - name
+    responses:
+      201:
+        description: Register successful
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: string
+                  example: "64756ca68855802c34e23d15"
+
+/verify:
+  post:
+    tags:
+      - Auth
+    description: "Verify"
+    summary: "User verify account"
+    security:
+      - BearerAuth: []
+    consumes:
+      - "application/json"
+    produces:
+      - "application/json"
+    parameters:
+      - in: body
+        name: code
+        type: string
+        required: true
+        description: "received code"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+            required:
+              - code
+    responses:
+      200:
+        description: Verify successful
+        content:
+          application/json:
+            schema:
+              properties:
+                result:
+                  type: boolean
+                  example: true

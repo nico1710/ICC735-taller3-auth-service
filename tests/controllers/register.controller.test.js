@@ -312,7 +312,7 @@ describe("Controller: Register", () => {
 		};
 
 		await register(req, res);
-		expect(res.status).to.be.calledWith(200);
+		expect(res.status).to.be.calledWith(201);
 		expect(res.json).to.be.calledWith({ userId });
 		expect(registerLogicStub).to.be.called;
 	});

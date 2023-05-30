@@ -32,4 +32,8 @@ export default {
 			VERIFIED: "Cuenta verificada :)",
 		},
 	},
+	REGISTRO_CIVIL_API: {
+		BASE_URL: process.env.REGISTRO_CIVIL_API_BASE_URL || "",
+		APIKEY: process.env.REGISTRO_CIVIL_API_BASE_URL || "",
+	},
 };

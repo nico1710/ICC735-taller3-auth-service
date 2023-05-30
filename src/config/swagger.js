@@ -16,8 +16,7 @@ const SWAGGER_OPTIONS = {
 		},
 		servers: [
 			{
-				url: HOST,
-				port: PORT,
+				url: PORT ? `${HOST}:${PORT}` : HOST,
 			},
 		],
 	},

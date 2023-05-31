@@ -1,5 +1,5 @@
 import { expect, sinon } from "../chai.config.js";
-import * as login from "../../src/logic/login.logic.js";
+import {checkIfUserAlreadyExists,generateCodeToken,checkIfRUTisAllowed,register} from "../../src/logic/register.logic.js";
 import UserModel from "../../src/models/user.model.js";
 import { HTTPError } from "../../src/helpers/error.helper.js";
 import registerMessages from "../../src/messages/register.messages.js";

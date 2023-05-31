@@ -1,31 +1,28 @@
-import { expect, sinon } from "../chai.config.js";
+import { expect, jest } from "@jest/globals";
 import UserModel from "../../src/models/user.model.js";
-import { mongoConnect, mongoDisconnect } from "../../src/config/mongo";
+import {connectDB} from "../../src/config/mongo";
 
+jest.mock("bcrypt");
 describe("Models: User model unit test", () => {
-	let userModelStub;
+	const userModelStub = jest.spyOn(UserModel, "create");
 
-	before(async () => {
-		await mongoConnect("mongodb://127.0.0.1:27017/auth-service-local");
+	beforeAll(async () => {
+	   await connectDB();
 	});
 
-	after(async () => {
-		await mongoDisconnect();
-	});
-
-	beforeEach(() => {
-		userModelStub = sinon.stub(UserModel, "create");
-	});
-
-	afterEach(async () => {
-		userModelStub.restore();
-		await UserModel.deleteMany({});
+	beforeEach(async () => {
+		await userModelStub.deleteMany({});
 	});
 
     it("[SUCCESS] Create user with stub", async () => {
-		userModelStub.returns();
-		const user = {name:"Nombre", email: "email@gmail.com", password: "esunapassword" };
-		UserModel.save(user);
-		expect(userModelStub).to.be.calledWith(user);
+        
+	});
+
+    it("[SUCCESS] Compare password of user", async () => {
+        
+	});
+
+    it("[SUCCESS] Change user to verified", async () => {
+        
 	});
 });

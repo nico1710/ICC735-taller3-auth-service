@@ -60,11 +60,11 @@ describe("Logic: Logic login test", () => {
 			 },
 			 exec() {
 			   return {
-			 email: 'greci@gmail.com',
-			 password: 'P@ssword123',
-			 blocked: false,
-			 comparePassword(password) {
-			   return password === 'P@ssword123';
+					 email: 'greci@gmail.com',
+					 password: 'P@ssword123',
+					 blocked: false,
+					 comparePassword(password) {
+			 		  return password === 'P@ssword123';
 	 }}
    }});
 

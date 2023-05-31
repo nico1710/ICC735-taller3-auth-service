@@ -9,7 +9,7 @@ describe("Logic: Register logic test", ()=>{
     let registerLogicStub;
 
 	beforeEach(() => {
-		registerLogicStub = sinon.stub(UserModel, 'findOne');
+		registerLogicStub = sinon.stub(UserModel, "findOne");
     });
 
 	afterEach(() => {
@@ -17,7 +17,7 @@ describe("Logic: Register logic test", ()=>{
 	});
      
 
-      it("[ERROR] User is alredy register in website", async ()=>{
+    it("[ERROR] User is alredy register in website", async ()=>{
         const user = {
             email: "test@gmail.com",
             rut: "19972287-5",
@@ -38,40 +38,38 @@ describe("Logic: Register logic test", ()=>{
       } catch (error) {
         expect(error).to.deep.equal(httpError);
       }
-      });
+    });
 
-      it("[ERROR] Rut is not allowed", async ()=>{
+    it("[ERROR] Rut is not allowed", async () => {
         const user = {
-            email: "test@gmail.com",
-            rut: "12345678-9",
-            password:"P@ssword123"
-          };
+          name:"Nicolas",
+          email:"grecia@gmail.com",  
+          rut: "12345678-9",
+          password:"P@ssword123"
+        };
+      
+        registerLogicStub.returns({
+            exec(){
+                return{
+                    rut:"124151515-2"
+                } 
+            }
+          });
     
-        registerLogicStub.returns({exec(){
-            return {
-                email:"grecia@gmail.com",
-                rut:"12311441-2"
-            }}});
+        const httpError = new HTTPError({
+          name: registerMessages.userNotAllowed.name,
+          msg: registerMessages.userNotAllowed.message,
+          code: 400,
+        });
+      
+        try {
+          await register(user);
+        } catch (error) {
+          expect(error).to.deep.equal(httpError);
+        }
+    });
 
-      const httpError = new HTTPError({
-        name: registerMessages.userNotAllowed.name,
-        msg: registerMessages.userNotAllowed.message,
-        code: 400,
-      });
-
-      try {
-        await register(user);
-      } catch (error) {
-        expect(error).to.deep.equal(httpError);
-      }
+    it("[SUCCESS] Rut is allowed", async ()=>{
            
-      });
-
-      it("[SUCCESS] Rut is allowed", async ()=>{
-           
-      });
-
-      it("[SUCCESS] Register user in website", async ()=>{
-           
-      });
+    });
 });

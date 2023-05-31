@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { expect, sinon } from "../chai.config.js";
 import UserModel from "../../src/models/user.model.js";
+import bcrypt from 'bcrypt';
 
 describe("Models: User model unit test", () => {
   let createStub;
@@ -74,4 +75,16 @@ describe("Models: User model unit test", () => {
     expect(createStub.calledOnce).not.be.true;
     expect(findStub.calledWith({ email: data.email })).to.be.true;
   });
+
+  it("[SUCCESS] Password hashed",async() =>{
+    const salt = await bcrypt.genSalt(12);
+    const hash = await bcrypt.hash(data.password, salt);
+    
+    const user = new UserModel({
+      password: hash,
+    });
+
+    const passwordCompare = await user.comparePassword(data.password);
+    expect(passwordCompare).to.equal(true);
+  })
 });

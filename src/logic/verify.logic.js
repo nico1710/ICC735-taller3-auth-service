@@ -65,7 +65,7 @@ function checkIfCodeExists({ code }) {
  * @throws {HTTPError} throws 400 HTTPError when the user code not match with the input code
  */
 async function verify({ userId, code }) {
-	const foundUser = await UserModel.findById(userId).select("+code").exec();
+	const foundUser = await UserModel.findById(userId).select("+code");
 
 	if (!foundUser) {
 		throw new HTTPError({

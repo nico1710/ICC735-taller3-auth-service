@@ -18,28 +18,56 @@ describe("Logic: Register logic test", ()=>{
      
 
       it("[ERROR] User is alredy register in website", async ()=>{
-           const user ={
-              name: "Nicolas",
-              rut: "19972287-5",
-              email: "nicolas@gmail.com",
-              password: "P@ssword123"
-           };
-        registerLogicStub.resolves({});
+        const user = {
+            email: "test@gmail.com",
+            rut: "19972287-5",
+            password:"P@ssword123"
+          };
+    
+        registerLogicStub.returns({exec(){
+        return {email:user.email}}});
 
-        const httpError ={
-            name: registerMessages.alreadyExists.name,
-            msg: registerMessages.alreadyExists.messages,
-            code: 400
-        }
-
-        try {
-			await register(user);
-		} catch (error) {
-			expect(error).to.equal(httpError);
-		}
+      const httpError = new HTTPError({
+        name: registerMessages.alreadyExists.name,
+        msg: registerMessages.alreadyExists.message,
+        code: 400,
       });
 
-      it("[ERROR] Rut is allowed", async ()=>{
+      try {
+        await register(user);
+      } catch (error) {
+        expect(error).to.deep.equal(httpError);
+      }
+      });
+
+      it("[ERROR] Rut is not allowed", async ()=>{
+        const user = {
+            email: "test@gmail.com",
+            rut: "12345678-9",
+            password:"P@ssword123"
+          };
+    
+        registerLogicStub.returns({exec(){
+            return {
+                email:"grecia@gmail.com",
+                rut:"12311441-2"
+            }}});
+
+      const httpError = new HTTPError({
+        name: registerMessages.userNotAllowed.name,
+        msg: registerMessages.userNotAllowed.message,
+        code: 400,
+      });
+
+      try {
+        await register(user);
+      } catch (error) {
+        expect(error).to.deep.equal(httpError);
+      }
+           
+      });
+
+      it("[SUCCESS] Rut is allowed", async ()=>{
            
       });
 

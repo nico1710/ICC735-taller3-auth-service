@@ -1,16 +1,21 @@
 import { expect, sinon } from "../chai.config.js";
 import UserModel from "../../src/models/user.model.js";
 import verify from "../../src/logic/verify.logic.js";
+import { generateToken, verifyToken } from "../../src/helpers/jwt.helper.js";
+import jwt from "jsonwebtoken";
 
 describe("Verify Logic: Verify user unit test", () => {
   let findUserStub;
+  let verifyTokenStub;
 
   beforeEach(() => {
     findUserStub = sinon.stub(UserModel, "findById");
+    verifyTokenStub = sinon.stub(jwt, "verify");
   });
 
   afterEach(() => {
     findUserStub.restore();
+    verifyTokenStub.restore();
   });
 
   it("[ERROR] Should return a error when the userId is a invalid", async () => {
@@ -95,6 +100,36 @@ describe("Verify Logic: Verify user unit test", () => {
     }catch(error) {
       expect(error.msg).to.equal("the code has expired");
       expect(error.name).to.equal("verify_code_expired_error");
+      expect(findUserStub).to.have.been.called;
+    }
+  });
+
+  it("[ERROR] Should return error if code and decodedCode not equals", async () => {
+    const userId = "user123";
+    const token = generateToken({ data: { id: userId }})
+    const input = {
+      userId: "user123",
+      code: token,
+      verified: false,
+    };
+    const foundUser = {
+      _id: userId,
+      code: token,
+      setVerified: sinon.stub().resolves(),
+    };
+
+    try {
+      findUserStub.withArgs(input.userId).returns(
+        { select: sinon.stub().returns(foundUser) },
+      );
+
+      // Configura el stub de verifyToken para devolver el código decodificado
+      verifyTokenStub.withArgs(input.code).returns("decodedCode");
+
+      await verify(input);
+    }catch(error) {
+      expect(error.msg).to.equal("the code are invalid");
+      expect(error.name).to.equal("verify_invalid_code_error");
       expect(findUserStub).to.have.been.called;
     }
   });

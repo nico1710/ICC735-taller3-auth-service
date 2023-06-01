@@ -23,8 +23,9 @@ const axiosInstance = axios.create({
  */
 async function getCriminalRecords(rut) {
 	//return axiosInstance.get("????").then((response) => true);
-	const fakeResponse = rut !== "555555555";
-	return Promise.resolve(fakeResponse);
+	//const fakeResponse = rut !== "555555555";
+	const response = await axiosInstance.get(`/person/${rut}/criminal_records`);
+  return response;
 }
 
 export { getCriminalRecords };

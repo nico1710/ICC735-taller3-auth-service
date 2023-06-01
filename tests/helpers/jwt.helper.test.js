@@ -7,8 +7,8 @@ describe("Helpers: Jwt helper test", () => {
 	let jwtStub;
 
 	beforeEach(() => {
-		jwtStub = sinon.stub(jwt, 'sign').returns('generatedToken');
-    });
+		jwtStub = sinon.stub(jwt, 'sign').returns('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NSIsImlhdCI6MTUxNjIzOTAyMn0._dF2Nq5TcLuZrKABKcoKwaAOC8qbTxc443kOOckQsTM');
+  });
 
 	afterEach(() => {
 		jwtStub.restore();
@@ -20,7 +20,7 @@ describe("Helpers: Jwt helper test", () => {
     
         const token = generateToken({ data, expire });
     
-        expect(token).to.equal('generatedToken');
+        expect(token).to.equal('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NSIsImlhdCI6MTUxNjIzOTAyMn0._dF2Nq5TcLuZrKABKcoKwaAOC8qbTxc443kOOckQsTM');
       });
 
       it('[SUCCESS] Verify JWT token', () => {

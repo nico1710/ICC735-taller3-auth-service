@@ -11,6 +11,7 @@ describe("Models: User model unit test", () => {
     email: "nico@gmail.com",
     password: "123456",
     rut: "12345678-9",
+    code: "esteesuncodigo",
     verified: true,
     blocked: false,
   };
@@ -86,5 +87,15 @@ describe("Models: User model unit test", () => {
 
     const passwordCompare = await user.comparePassword(data.password);
     expect(passwordCompare).to.equal(true);
+  })
+
+  it("[SUCCESS] Set user to verified",async() =>{
+
+    const user = await UserModel(data);
+
+    const verifiedUser = await user.setVerified();
+
+    expect(verifiedUser.code).to.be.null;
+    expect(verifiedUser.verified).to.be.true;
   })
 });

@@ -86,10 +86,10 @@ async function comparePassword(candidatePassword) {
 /**
  * Set user.verified = true and remove the user.code
  */
-function setVerified() {
+async function setVerified() {
 	this.code = null;
 	this.verified = true;
-	this.save();
+	return this.save();
 }
 
 userSchema.methods = {

@@ -31,7 +31,7 @@ describe("Logic: Logic login test", () => {
 
 	it('[ERROR] User is Blocked', async () =>{	  
 		  const  user = {
-			email: 'grecia@gmail.com',
+			email: 'greci@gmail.com',
 			password: 'P@ssword123',
 		  };
 
@@ -56,17 +56,12 @@ describe("Logic: Logic login test", () => {
 
 		loginLogicStub.returns({
 			select() {
-			 return this;
-			 },
-			 exec() {
-			   return {
-					 email: 'greci@gmail.com',
-					 password: 'P@ssword123',
-					 blocked: false,
-					 comparePassword(password) {
-			 		  return password === 'P@ssword123';
-	 }}
-   }});
+			  return this;
+			},
+			exec() {
+			  return Promise.resolve(null);
+			}
+		  });
 
 		const httpError = new HTTPError({
 			name: loginMessages.invalidCredentials.name,

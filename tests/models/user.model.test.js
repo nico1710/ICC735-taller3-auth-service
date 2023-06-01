@@ -76,7 +76,7 @@ describe("Models: User model unit test", () => {
     expect(findStub.calledWith({ email: data.email })).to.be.true;
   });
 
-  it("[SUCCESS] Password hashed",async() =>{
+  it("[SUCCESS] Compare password hashed",async() =>{
     const salt = await bcrypt.genSalt(12);
     const hash = await bcrypt.hash(data.password, salt);
     

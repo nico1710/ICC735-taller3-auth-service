@@ -37,10 +37,10 @@ async function checkIfUserAlreadyExists({ email, rut }) {
 	const foundUser = await UserModel.findOne({
 		$or: [
 			{
-				email: emailRegex,
+				email,
 			},
 			{
-				rut: rutRegex,
+				rut,
 			},
 		],
 	}).exec();
@@ -112,18 +112,18 @@ async function register(user) {
 	const userInstance = new UserModel({ ...user, code: codeToken });
 
 	const savedUser = await userInstance.save();
-
+  
 	// Validate Email if NODE_ENV is different of 'local'
-	if (NODE_ENV !== local) {
-		await sendEmail({
-			to: savedUser.email,
-			subject: VALIDATE,
-			body: validateEmail(user),
-		}).catch(async (err) => {
-			await savedUser.remove();
-			throw err;
-		});
-	}
+	// if (NODE_ENV !== local) {
+	// 	await sendEmail({
+	// 		to: savedUser.email,
+	// 		subject: VALIDATE,
+	// 		body: validateEmail(user),
+	// 	}).catch(async (err) => {
+	// 		await savedUser.remove();
+	// 		throw err;
+	// 	});
+	// }
 
 	return savedUser._id;
 }

@@ -22,9 +22,14 @@ const axiosInstance = axios.create({
  * @param {string} rut - User RUT
  */
 async function getCriminalRecords(rut) {
-	//return axiosInstance.get("????").then((response) => true);
-	const fakeResponse = rut !== "555555555";
-	return Promise.resolve(fakeResponse);
+  //return axiosInstance.get("????").then((response) => true);
+	//const fakeResponse = rut !== "555555555";
+	const response = await axios.get(`https://api.rut.cl/v1/person/${rut}/criminal_records`);
+  if (response.status !== 200) return false;
+
+  const { data } = response;
+  if (data.quantity > 0) return false;
+  return true;
 }
 
 export { getCriminalRecords };
